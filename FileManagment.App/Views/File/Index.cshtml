@@ -1,0 +1,68 @@
+﻿@model FileManagmentSystem.App.ViewModels.FileViewModels.FileListVM
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Files</h2>
+<style>
+    .spacing{
+        width: 100%;
+        display: block;
+        margin-bottom: 7px;
+    }
+</style>
+<p>
+    @Html.ActionLink("Upload File", "Edit", "File", new { @class = "btn btn-primary btn-sm" })
+</p>
+@Html.Partial("~/Views/Shared/_FilterPartial.cshtml", Model.Filter)
+<table class="table table-bordered">
+    <tr>
+            <th>
+                File Name
+            </th>
+        
+        <th>
+            User
+        </th>
+        <th>
+            Users File Name
+        </th>
+        <th>
+            Description
+        </th>
+        <th>
+            Category
+        </th>
+        <th>
+            Options
+        </th>
+    </tr>
+
+    @foreach (var item in Model.Items)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.FileName)
+            </td>
+            <td>
+                @(item.User.Username)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FileNameGivenByUser)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Category)
+            </td>
+            <td class="text-center">
+                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "btn btn-warning btn-sm spacing" })
+                    @Html.ActionLink("Details", "Details", new { id = item.Id }, new { @class = "btn btn-info btn-sm spacing" })
+                    @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "btn btn-danger btn-sm spacing" })
+            </td>
+        </tr>
+    }
+</table>
+@Html.Partial("~/Views/Shared/_PagingPartial.cshtml", Model.Pager)

@@ -1,0 +1,14 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+<div class="jumbotron">
+    <h1>File management system</h1>
+    <p class="lead">The best file management system!</p>
+    @Html.ActionLink("View your files", "Index", "File",null, new { @class = "btn btn-primary btn-lg" }) |
+    @Html.ActionLink("Upload File", "Edit", "File",null, new { @class = "btn btn-primary btn-md" })
+</div>
+
+<div class="row">
+    <h1 class="h1">Simple,yet powerful.</h1>
+</div>

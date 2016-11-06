@@ -1,0 +1,84 @@
+﻿@model FileManagmentSystem.App.Filters.IFilter
+@{
+    string controller = this.ViewContext.RouteData.Values["controller"].ToString();
+    string action = this.ViewContext.RouteData.Values["action"].ToString();
+    string namePrefix = Model.Prefix;
+    string url = Url.Action(action, controller) + "?";
+    string idPrefix = namePrefix.Replace(".", "_");
+    var parentPager = Model.ParentPager;
+    var editableProperties = new Dictionary<System.Reflection.PropertyInfo, FileManagmentSystem.App.Attributes.FilterPropertyAttribute>();
+    foreach (System.Reflection.PropertyInfo pi in Model.GetType().GetProperties())
+    {
+        object obj = pi.GetCustomAttributes(false).FirstOrDefault(a => a is FileManagmentSystem.App.Attributes.FilterPropertyAttribute);
+        if (obj != null)
+        {
+            FileManagmentSystem.App.Attributes.FilterPropertyAttribute attrib = (FileManagmentSystem.App.Attributes.FilterPropertyAttribute)obj;
+            editableProperties.Add(pi, attrib);
+        }
+    }
+}
+
+<form action="@url" method="get">
+    @Html.AntiForgeryToken()
+    @foreach (string key in this.Request.QueryString.Keys)
+    {
+        if (!key.StartsWith(namePrefix) && key != parentPager.Prefix + "CurrentPage" && !key.Contains("__RequestVerificationToken"))
+        {
+            @Html.Hidden(key, this.Request.QueryString[key]);
+        }
+    }
+
+    @foreach (var kvp in this.ViewContext.RouteData.Values)
+    {
+        if (kvp.Key != "controller" && kvp.Key != "action" && kvp.Key != parentPager.Prefix + "CurrentPage" && !kvp.Key.StartsWith(namePrefix))
+        {
+            @Html.Hidden(kvp.Key, kvp.Value);
+        }
+    }
+    <p>
+        <div class="row">
+            @foreach (var kvp in editableProperties)
+            {
+                <div class="form-group col-md-3 col-lg-3">
+                    @if (!String.IsNullOrEmpty(kvp.Value.DropDownTargetPropery))
+                    {
+                        @Html.Label(idPrefix + kvp.Key.Name, kvp.Value.DisplayName, new { @class = "control-label" })
+                        <select class="form-control" name="@namePrefix@kvp.Value.DropDownTargetPropery">
+                            <option value="">Please Select Item</option>
+                            @foreach (var item in (List<SelectListItem>)kvp.Key.GetValue(Model, null))
+                            {
+                                <option class="form-control" @( Model.GetType().GetProperty(kvp.Value.DropDownTargetPropery).GetValue(Model,null) != null && item.Value == Model.GetType().GetProperty(kvp.Value.DropDownTargetPropery).GetValue(Model,null).ToString() ? "selected" : "") value="@item.Value">@item.Text</option>
+                            }
+                        </select>
+                    }
+                    else
+                    {
+
+                        if (@kvp.ToString().Contains("String"))
+                        {
+                            @Html.Label(idPrefix + kvp.Key.Name, kvp.Value.DisplayName, new { @class = "control-label" })
+                            @Html.TextBox(namePrefix + kvp.Key.Name, kvp.Key.GetValue(Model, null), new { @class = "form-control" })
+                        }
+                        else if (@kvp.ToString().Contains("Int"))
+                        {
+                            @Html.Label(idPrefix + kvp.Key.Name, kvp.Value.DisplayName, new { @class = "control-label" })
+                            @Html.TextBox(namePrefix + kvp.Key.Name, kvp.Key.GetValue(Model, null), new { @class = "form-control" })
+                        }
+                    }
+                </div>
+            }
+        </div>
+        <div class="row">
+            <div class="form-group col-md-6">
+                <button type="submit" class="btn blue btn-success">
+                    <i class="fa fa-search" aria-hidden="true"></i>
+                    <span>Search</span>
+                </button>
+                <button type="reset" class="btn btn-default" onclick="location.href = '@(Url.Action(action, controller) + "?")'">
+                    <i class="fa fa-times" aria-hidden="true"></i>
+                    <span>Clear</span>
+                </button>
+            </div>
+        </div>
+    </p>
+</form>
