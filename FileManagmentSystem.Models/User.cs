@@ -30,5 +30,7 @@ namespace FileManagmentSystem.Models
         public string Email { get; set; }
         
         public virtual ICollection<File> Files { get; set; }
+
+        public virtual ICollection<ChangedPasswords> ChangedPasswords { get; set; }
     }
 }

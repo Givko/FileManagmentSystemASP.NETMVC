@@ -10,12 +10,13 @@ namespace FileManagment.App.Migrations
     {
         public Configuration()
         {
-            AutomaticMigrationDataLossAllowed = true;
+            //AutomaticMigrationDataLossAllowed = true;
             AutomaticMigrationsEnabled = true;
         }
 
         protected override void Seed(FileManagment.App.AppContext context)
         {
+            
         }
     }
 }

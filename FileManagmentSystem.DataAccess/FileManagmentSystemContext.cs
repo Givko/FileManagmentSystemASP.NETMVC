@@ -11,8 +11,11 @@ namespace FileManagmentSystem.DataAccess
         public FileManagmentSystemContext()
             : base("name=FileManagmentSystemContext")
         {
+
+            //Database.SetInitializer(new MigrateDatabaseToLatestVersion<FileManagmentSystemContext<TEntity>, Configuration>());
         }
 
         public virtual DbSet<TEntity> Items { get; set; }
+
     }
 }
