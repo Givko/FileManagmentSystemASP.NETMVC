@@ -75,10 +75,10 @@ namespace FileManagment.App.Controllers
             service.Save(user);
 
             user = service.GetById(user.Id);
-            EmailService eSrvc = new EmailService(user);
-            eSrvc.SendRegistrationEmail();
+            //EmailService eSrvc = new EmailService(user);
+            //eSrvc.SendRegistrationEmail();
 
-            return View("RegisteredView");
+            return RedirectToAction("ChangePassword", "ChangePassword");
         }
 
         private void PopulateUserVMtoUserEntity(UserVM userVM, User user)
