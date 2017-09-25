@@ -19,7 +19,7 @@ namespace FileManagmentSystem.Services
         public EmailService(User user)
         {
             this.User = user;
-            body = "Registration successfully made click on the link to change password! http://localhost:11626/ChangePassword/ChangePassword/?UserId=" + user.Id + "&" + "OldPassword=" + this.User.Password;
+            body = "Registration successfully made click on the link to change password! http://filemanagmentsystem.apphb.com//ChangePassword/ChangePassword/?UserId=" + user.Id + "&" + "OldPassword=" + this.User.Password;
         }
 
         public void SendRegistrationEmail()
@@ -31,9 +31,9 @@ namespace FileManagmentSystem.Services
             {
                 Host = "smtp.gmail.com",
                 Port = 587,
-                EnableSsl = true,
+                EnableSsl = false,
                 DeliveryMethod = SmtpDeliveryMethod.Network,
-                UseDefaultCredentials = false,
+                UseDefaultCredentials = true,
                 Credentials = new NetworkCredential(fromEmail.Address, WebConfigurationManager.AppSettings["EmailPassword"])
             };
             using (var message = new MailMessage(fromEmail, toEmail)
